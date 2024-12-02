@@ -1,0 +1,109 @@
+<section class="w-full md:ml-3 mx-3 bg-white p-6 rounded-lg shadow-lg">
+    <h2 class="text-gray-800 text-2xl">Add Book</h2>
+
+    <form action="/books" method="POST">
+      
+        <!-- Name Field -->
+        <div class="mb-4">
+          <label for="name" class="block text-gray-700 text-sm font-medium">Name</label>
+          <input type="text" id="name" name="name" class="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="author" class="block text-gray-700 text-sm font-medium">Author</label>
+            <input type="text" id="author" name="author" class="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+          </div>
+  
+        <!-- Year Field -->
+        <div class="mb-4">
+          <label for="year" class="block text-gray-700 text-sm font-medium">Year</label>
+          <input type="number" id="year" name="year" class="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+        </div>
+  
+        <!-- Genre Field (Multiple Checkboxes in 3 Columns) -->
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-medium">Genres</label>
+            <div class="grid grid-cols-3 gap-4">
+            <% genres.forEach(function(genre) { %>
+                <div class="flex items-center">
+                <input type="checkbox" id="<%= genre %>" name="genres" value="<%= genre %>" class="h-4 w-4 border-gray-300 rounded text-purple-500 focus:ring-purple-500">
+                <label for="<%= genre %>" class="ml-2 text-gray-700 text-sm"><%= genre %></label>
+                </div>
+            <% }); %>
+            </div>
+        </div>
+  
+        <!-- isRead Checkbox (Determines if Rating is Visible) -->
+        <div class="mb-4">
+          <label for="isRead" class="block text-gray-700 text-sm font-medium">Have you read this book?</label>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="flex items-center">
+                <input type="radio" id="status" name="status" value="read" required class="h-4 w-4 border-gray-300 rounded text-purple-500 focus:ring-purple-500">
+                <label for="status" class="ml-2 text-gray-700 text-sm">Yes</label>
+            </div>
+            <div class="flex items-center">
+                <input type="radio" id="status2" name="status" value="in progress" class="h-4 w-4 border-gray-300 rounded text-purple-500 focus:ring-purple-500">
+                <label for="status" class="ml-2 text-gray-700 text-sm">In Progress</label>
+            </div>
+            <div class="flex items-center">
+                <input type="radio" id="status3" name="status" value="not started" class="h-4 w-4 border-gray-300 rounded text-purple-500 focus:ring-purple-500">
+                <label for="status" class="ml-2 text-gray-700 text-sm">No</label>
+            </div>
+          </div>
+          
+        </div>
+  
+        <!-- Rating Field (Hidden when isRead is false) -->
+        <div id="ratingField" class="mb-4">
+          <label for="rating" class="block text-gray-700 text-sm font-medium">Rating (0-10)</label>
+          <div class="flex items-center space-x-4">
+            <!-- Range Input -->
+            <input type="range" id="rating" name="rating" min="0" max="10" step="1" value="5" class="w-full h-2 bg-purple-200 rounded-lg" required>
+            <!-- Rating Value Display -->
+            <span id="ratingValue" class="text-gray-700 text-sm">5</span>
+          </div>
+        </div>
+  
+        <!-- Submit Button -->
+        <div class="flex justify-center">
+          <button type="submit" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500">Submit</button>
+        </div>
+      </form>
+
+      <script>
+        // JavaScript to update rating value on the slider and input field
+        const rangeInput = document.getElementById('rating');
+        const ratingValue = document.getElementById('ratingValue');
+        const ratingInputField = document.getElementById('ratingInput');
+        const isReadYesRadio = document.getElementById('status');
+        const ratingField = document.getElementById('ratingField');
+
+        // Initially hide the rating field if isRead is 'No'
+        if (isReadYesRadio.checked) {
+        ratingField.style.display = 'block'; // Show rating field
+        } else {
+        ratingField.style.display = 'none'; // Hide rating field
+        }
+
+        // Event listener to update rating value and synchronize the range and number input
+        rangeInput.addEventListener('input', function() {
+        const value = rangeInput.value;
+        ratingValue.textContent = value;
+        ratingInputField.value = value;
+        });
+
+        // Event listener for the radio buttons to toggle rating visibility
+        isReadYesRadio.addEventListener('change', function() {
+        ratingField.style.display = 'block'; // Show rating field when "Yes" is selected
+        });
+
+        const isReadNoRadio = document.getElementById('status2');
+        isReadNoRadio.addEventListener('change', function() {
+        ratingField.style.display = 'none'; // Hide rating field when "No" is selected
+        });
+        const isReadNoRadio2 = document.getElementById('status3');
+        isReadNoRadio2.addEventListener('change', function() {
+        ratingField.style.display = 'none'; // Hide rating field when "No" is selected
+        });
+      </script>
+</section>

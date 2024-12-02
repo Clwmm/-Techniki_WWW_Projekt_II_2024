@@ -4,15 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyApp</title>
+    <link href="/style/output.css" rel="stylesheet">
+    <title>MyLibrary</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+        }
+    </style>
 </head>
 
 <body>
-    Before
-    <br>
-    <%- body %>
-    <br>
-    After
+    <%- include('../partials/header.ejs') %>
+    <main class="container mx-auto flex flex-col md:flex-row mt-2">
+        <%- body %>
+    </main>
+    <%- include('../partials/footer.ejs') %>
 </body>
 
 </html>

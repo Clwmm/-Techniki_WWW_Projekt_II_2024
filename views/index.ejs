@@ -1,1 +1,233 @@
-Middle
+<section class="w-full md:ml-3 mx-3 bg-white p-6 rounded-lg shadow-lg">
+    <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 hover:cursor-pointer" id="searchSvg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+    </svg>
+    
+    <div id="searchDiv">
+        <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Search Books</h1>
+    
+    <form id="searchForm" class="space-y-4">
+      <!-- Book Name -->
+      <div>
+        <label for="name" class="block text-gray-700 font-medium">Name</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          placeholder="Enter book name" 
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:ring focus:ring-purple-200 focus:outline-none">
+      </div>
+
+      <!-- Author -->
+      <div>
+        <label for="author" class="block text-gray-700 font-medium">Author</label>
+        <input 
+          type="text" 
+          id="author" 
+          name="author" 
+          placeholder="Enter author name" 
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:ring focus:ring-purple-200 focus:outline-none">
+      </div>
+
+      <!-- Rating -->
+      <div>
+        <label for="rating" class="block text-gray-700 font-medium">Rating</label>
+        <input 
+          type="number" 
+          id="rating" 
+          name="rating" 
+          min="0" 
+          max="10" 
+          placeholder="Enter rating (0-10)" 
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:ring focus:ring-purple-200 focus:outline-none">
+      </div>
+
+      <!-- Genre -->
+      <div>
+        <label for="genre" class="block text-gray-700 font-medium">Genre</label>
+        <select 
+          id="genre" 
+          name="genre" 
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:ring focus:ring-purple-200 focus:outline-none">
+          <option value="">--Select Genre--</option>
+          <% genres.forEach(genre => { %>
+            <option value="<%= genre %>"><%= genre %></option>
+          <% }); %>
+        </select>
+      </div>
+
+      <!-- Status -->
+      <div>
+        <label class="block text-gray-700 font-medium">Status</label>
+        <div class="flex items-center space-x-4 mt-1">
+          <label class="flex items-center">
+            <input type="radio" id="read" name="status" value="read" class="text-purple-600 focus:ring focus:ring-purple-200">
+            <span class="ml-2 text-gray-700">Read</span>
+          </label>
+          <label class="flex items-center">
+            <input type="radio" id="inProgress" name="status" value="in progress" class="text-purple-600 focus:ring focus:ring-purple-200">
+            <span class="ml-2 text-gray-700">In Progress</span>
+          </label>
+          <label class="flex items-center">
+            <input type="radio" id="notStarted" name="status" value="not started" class="text-purple-600 focus:ring focus:ring-purple-200">
+            <span class="ml-2 text-gray-700">Not Started</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        class="w-full bg-purple-600 text-white font-medium py-2 rounded-lg hover:bg-purple-700 transition duration-200">
+        Search
+      </button>
+    </form>
+    </div>
+
+    <table class="min-w-full bg-white rounded-lg shadow-md my-6">
+        <thead>
+            <tr class="text-gray-600 text-sm font-semibold bg-gray-50">
+                <th class="py-3 px-4 text-left">Name</th>
+                <th class="py-3 px-4 text-left">Author</th>
+                <th class="py-3 px-4 text-left hidden sm:table-cell">Year</th> <!-- Hidden on xs -->
+                <th class="py-3 px-4 text-left hidden md:table-cell">Genres</th> <!-- Hidden on sm and below -->
+                <th class="py-3 px-4 text-left hidden sm:table-cell">Rating</th> <!-- Hidden on xs -->
+                <th class="py-3 px-4 text-left">Status</th> <!-- Always visible -->
+            </tr>
+        </thead>
+        <tbody id="resultsTableBody">
+            <!-- Results will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+    
+    
+    <script>
+        async function performSearch(criteria = {}) {
+            resetRadioButtons();
+
+            // Send POST request to the /search route with the given criteria
+            const response = await fetch('/books/search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(criteria),
+            });
+
+            const results = await response.json();
+
+            // Get the table body element where the rows will be inserted
+            const resultsTableBody = document.getElementById('resultsTableBody');
+            resultsTableBody.innerHTML = ''; // Clear previous results
+
+            // Iterate over the results and create table rows
+            results.forEach((item) => {
+                console.log("item: ", item);
+                const row = document.createElement('tr');
+                row.classList.add('border-t', 'border-b', 'border-gray-200');
+
+                // Create and append cells for each item
+                const nameCell = document.createElement('td');
+                nameCell.classList.add('py-3', 'px-4', 'text-sm', 'text-gray-800');
+                nameCell.textContent = item.name;
+
+                const authorCell = document.createElement('td');
+                authorCell.classList.add('py-3', 'px-4', 'text-sm', 'text-gray-800');
+                authorCell.textContent = item.author;
+
+                const yearCell = document.createElement('td');
+                yearCell.classList.add('py-3', 'px-4', 'text-sm', 'text-gray-800');
+                yearCell.textContent = item.year;
+
+                const genresCell = document.createElement('td');
+                genresCell.classList.add('py-3', 'px-4', 'text-sm', 'text-gray-800');
+                // Handle case when there are no genres
+                if (item.genres && item.genres.length > 0) {
+                    genresCell.textContent = item.genres.join(', ');
+                } else {
+                    genresCell.textContent = 'No genres available'; // or leave it empty
+                }
+
+                const ratingCell = document.createElement('td');
+                ratingCell.classList.add('py-3', 'px-4', 'text-sm', 'text-gray-800');
+                ratingCell.textContent = item.rating;
+
+                const statusCell = document.createElement('td');
+                statusCell.classList.add('py-3', 'px-4');
+
+                // Apply a color class to status
+                const statusSpan = document.createElement('span');
+                statusSpan.classList.add('inline-block', 'px-3', 'py-1', 'text-sm', 'font-semibold', 'rounded-full');
+                switch (item.status) {
+                    case 'read':
+                        statusSpan.classList.add('text-green-700', 'bg-green-100');
+                        statusSpan.textContent = 'Read';
+                        break;
+                    case 'in progress':
+                        statusSpan.classList.add('text-yellow-700', 'bg-yellow-100');
+                        statusSpan.textContent = 'In Progress';
+                        break;
+                    case 'not started':
+                        statusSpan.classList.add('text-red-700', 'bg-red-100');
+                        statusSpan.textContent = 'Not Started';
+                        break;
+                    default:
+                        statusSpan.textContent = 'Unknown';
+                        statusSpan.classList.add('text-gray-700', 'bg-gray-100');
+                        break;
+                }
+
+                statusCell.appendChild(statusSpan);
+
+                // Append cells to the row
+                row.appendChild(nameCell);
+                row.appendChild(authorCell);
+                row.appendChild(yearCell);
+                row.appendChild(genresCell);
+                row.appendChild(ratingCell);
+                row.appendChild(statusCell);
+
+                // Append the row to the table body
+                resultsTableBody.appendChild(row);
+            });
+        }
+
+        function resetRadioButtons() {
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(button => {
+            button.checked = false;
+            });
+        } 
+        // Trigger search when the form is submitted
+        document.getElementById('searchForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const searchCriteria = Object.fromEntries(formData.entries());
+            performSearch(searchCriteria);
+        });
+
+        // Trigger search on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            performSearch(); // Perform an empty search or provide default criteria
+        });
+
+        let search = false;
+        const searchSVG = document.getElementById('searchSvg');
+        const searchDiv = document.getElementById('searchDiv');
+
+        // Initially hide the rating field if isRead is 'No'
+        if (search) {
+                searchDiv.style.display = 'block'; // Show rating field
+            } else {
+                searchDiv.style.display = 'none'; // Hide rating field
+            }
+
+        // Event listener for the radio buttons to toggle rating visibility
+        searchSVG.addEventListener('click', function() {
+            search = !search;
+            if (search) {
+                searchDiv.style.display = 'block'; // Show rating field
+            } else {
+                searchDiv.style.display = 'none'; // Hide rating field
+            }
+        });
+      </script>
+</section>
