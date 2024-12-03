@@ -37,7 +37,7 @@ router.post('/search', async (req, res) => {
 
     // Fetch books matching query
     const books = await Book.find(query);
-    
+
     // Fetch genres for each book and add them to the books
     const booksWithGenres = [];
     for (let book of books) {
@@ -84,19 +84,36 @@ router.post('/', async (req, res) => {
     const savedBook = await book.save();
 
     if (genres) {
-      // Znajdź gatunki na podstawie nazw
-      const genreDocs = await Genre.find({ name: { $in: genres } });
+      if (Array.isArray(genres)) {
+        // Znajdź gatunki na podstawie nazw
+        const genreDocs = await Genre.find({ name: { $in: genres } });
 
-      if (genreDocs.length !== genres.length) {
-        return res.status(400).json({ message: 'Niektóre gatunki nie istnieją' });
+        if (genreDocs.length !== genres.length) {
+          return res.status(400).json({ message: 'Niektóre gatunki nie istnieją' });
+        }
+
+        // Zapisz połączenie książki z gatunkami
+        const bookGenres = genreDocs.map(genre => ({
+          book_id: savedBook._id,
+          genre_id: genre._id
+        }));
+        await BookGenre.insertMany(bookGenres);
+      } else {
+        const genre = genres;
+        const genreDoc = await Genre.findOne({ name: genre });
+
+        if (!genreDoc) {
+          return res.status(400).json({ message: 'Podany gatunek nie istnieje' });
+        }
+
+        // Zapisz połączenie książki z gatunkiem
+        const bookGenre = {
+          book_id: savedBook._id,
+          genre_id: genreDoc._id
+        };
+        await BookGenre.create(bookGenre);
       }
-  
-      // Zapisz połączenie książki z gatunkami
-      const bookGenres = genreDocs.map(genre => ({
-        book_id: savedBook._id,
-        genre_id: genre._id
-      }));
-      await BookGenre.insertMany(bookGenres);
+
     }
 
     res.status(201).json(savedBook);
@@ -107,9 +124,9 @@ router.post('/', async (req, res) => {
 
 router.get('/new', async (req, res) => {
   try {
-    const genres = await Genre.find({}, {name: 1, _id: 0});
+    const genres = await Genre.find({}, { name: 1, _id: 0 });
     const genresArray = genres.map(item => item.name);
-    res.render('books/new', { genres: genresArray})
+    res.render('books/new', { genres: genresArray })
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
