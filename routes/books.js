@@ -24,6 +24,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/edit', async (req, res) => {
+  const id = req.query;
+
+  const book = await Book.findById(id);
+
+  if (book) {
+    return res.render('books/edit', { book: book });
+  }
+
+  return res.render('index');
+});
+
 router.post('/search', async (req, res) => {
   const { name, author, rating, status, genre } = req.body;
 
@@ -77,8 +89,8 @@ router.post('/', async (req, res) => {
       name,
       author,
       year,
-      rating: status === 'read' ? rating : null,
-      status: status || 'not started',  // Jeśli status nie został podany, użyj domyślnego
+      rating: status === 'done' ? rating : null,
+      status: status || 'unread',  // Jeśli status nie został podany, użyj domyślnego
     });
 
     const savedBook = await book.save();
