@@ -1,4 +1,4 @@
-<section class="w-full bg-white p-6 rounded-lg shadow-lg">
+<section class="w-full bg-gray-100 p-6 rounded-lg shadow-lg">
   <h2 class="text-gray-800 text-2xl">Add Book</h2>
 
   <form action="/books" method="POST">
@@ -162,7 +162,8 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        mode: 'cors'
       })
         .then(response => {
           if (!response.ok) {

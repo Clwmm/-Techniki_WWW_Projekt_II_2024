@@ -1,8 +1,10 @@
-<section class="w-full bg-white p-6 rounded-lg shadow-lg">
+<section class="w-full bg-gray-100 p-6 rounded-lg shadow-lg">
     <%= book %>
         <div class="grid grid-cols-3 gap-4 mb-4 items-center">
             <!-- Original Value -->
-            <div class="text-gray-700 font-semibold" id="original-value">Name</div>
+            <div class="text-gray-700 font-semibold" id="original-value">
+                <%= book.name %>
+            </div>
 
             <!-- Input Field -->
             <input type="text"
@@ -17,7 +19,9 @@
         </div>
         <div class="grid grid-cols-3 gap-4 mb-4 items-center">
             <!-- Original Value -->
-            <div class="text-gray-700 font-semibold" id="original-value">Author</div>
+            <div class="text-gray-700 font-semibold" id="original-value">
+                <%= book.author %>
+            </div>
 
             <!-- Input Field -->
             <input type="text"
@@ -32,7 +36,9 @@
         </div>
         <div class="grid grid-cols-3 gap-4 mb-4 items-center">
             <!-- Original Value -->
-            <div class="text-gray-700 font-semibold" id="original-value">Year</div>
+            <div class="text-gray-700 font-semibold" id="original-value">
+                <%= book.year %>
+            </div>
 
             <!-- Input Field -->
             <input type="number"
@@ -47,7 +53,9 @@
         </div>
         <div class="grid grid-cols-3 gap-4 mb-4 items-center">
             <!-- Original Value -->
-            <div class="text-gray-700 font-semibold" id="original-value">Rating</div>
+            <div class="text-gray-700 font-semibold" id="original-value">
+                <%= book.rating %>
+            </div>
 
             <!-- Input Field -->
             <input type="number"
@@ -62,7 +70,9 @@
         </div>
         <div class="grid grid-cols-3 gap-4 mb-4 items-center">
             <!-- Original Value -->
-            <div class="text-gray-700 font-semibold" id="original-value">Original Value</div>
+            <div class="text-gray-700 font-semibold" id="original-value">
+                <%= book.status %>
+            </div>
 
             <!-- Input Field -->
             <input type="text"
