@@ -28,12 +28,64 @@ router.get('/edit', async (req, res) => {
   const id = req.query;
 
   const book = await Book.findById(id);
+  const genresWithId = [];
+  const genres = await BookGenre.find({ book_id : book._id })
+  const all_genres = await Genre.find();
+
+  for (let genre of genres) {
+    const genres_ = await Genre.findById(genre.genre_id)
+    genresWithId.push(genres_)
+  }
 
   if (book) {
-    return res.render('books/edit', { book: book });
+    return res.render('books/edit', { book: book, genres : genresWithId, all_genres: all_genres });
   }
 
   return res.render('index');
+});
+
+router.get('/edit_book', async (req, res) => {
+  const { id, name, author, year, rating, status } = req.query;
+
+  await Book.findByIdAndUpdate(
+    id,
+    { name, author, year, rating, status }
+  );
+
+  const url = "/books/edit?_id=" + id;
+  return res.redirect(url);
+});
+
+router.get('/delete_book', async (req, res) => {
+  const { id } = req.query;
+
+  await Book.findByIdAndDelete(id);
+  await BookGenre.deleteMany({ book_id: id });
+
+  return res.redirect("/");
+});
+
+router.get('/add_genre_to_book', async (req, res) => {
+  const { genre_id, book_id } = req.query;
+
+  const newRecord = new BookGenre({
+    book_id: book_id,
+    genre_id: genre_id
+  });
+
+  await newRecord.save();
+
+  const url = "/books/edit?_id=" + book_id;
+  return res.redirect(url);
+});
+
+router.get('/remove_genre_from_book', async (req, res) => {
+  const { genre_id, book_id } = req.query;
+  
+  await BookGenre.findOneAndDelete({book_id: book_id, genre_id: genre_id});
+
+  const url = "/books/edit?_id=" + book_id;
+  return res.redirect(url);
 });
 
 router.post('/search', async (req, res) => {
@@ -80,7 +132,6 @@ router.post('/search', async (req, res) => {
 
 // Dodaj nową książkę
 router.post('/', async (req, res) => {
-  console.log("body: ", req.body);
   const { name, author, year, rating, status, genres } = req.body;
 
   try {
@@ -128,7 +179,7 @@ router.post('/', async (req, res) => {
 
     }
 
-    res.status(201).json(savedBook);
+    res.redirect("/");
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

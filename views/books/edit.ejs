@@ -1,64 +1,198 @@
 <section class="w-full bg-gray-100 p-6 rounded-lg shadow-lg">
-    <%= book %>
-        <div class="grid grid-cols-3 gap-2 mb-4 items-center">
+        <div class="grid grid-cols-2 gap-2 mb-4 items-center">
             <!-- Original Value -->
             <div class="text-gray-700 font-semibold" id="original-value">
-                <%= book.name %>
+                Name
             </div>
 
             <!-- Input Field -->
             <input type="text"
                 class="border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                id="input-value" placeholder="New name" />
-
-            <!-- Button -->
-            <button class="bg-purple-500 text-white rounded text-center py-1 hover:bg-purple-600 focus:outline-none"
-                onclick="changeValue()">
-                Change
-            </button>
+                id="input-name" value="<%= book.name %>" />
         </div>
-        <div class="grid grid-cols-3 gap-2 mb-4 items-center">
+        <div class="grid grid-cols-2 gap-2 mb-4 items-center">
             <!-- Original Value -->
             <div class="text-gray-700 font-semibold" id="original-value">
-                <%= book.author %>
+                Author
             </div>
 
             <!-- Input Field -->
             <input type="text"
                 class="border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                id="input-value" placeholder="New Author" />
-
-            <!-- Button -->
-            <button class="bg-purple-500 text-white rounded text-center py-1 hover:bg-purple-600 focus:outline-none"
-                onclick="changeValue()">
-                Change
-            </button>
+                id="input-author" value="<%= book.author %>" />
         </div>
-        <div class="grid grid-cols-3 gap-2 mb-4 items-center">
+        <div class="grid grid-cols-2 gap-2 mb-4 items-center">
             <!-- Original Value -->
             <div class="text-gray-700 font-semibold" id="original-value">
-                <%= book.year %>
+                Year
             </div>
 
             <!-- Input Field -->
             <input type="number"
-                class="border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                id="input-value" placeholder="New Year" />
+            class="border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            id="input-year" value="<%= book.year %>" />
+        </div>
 
-            <!-- Button -->
-            <button class="bg-purple-500 text-white rounded text-center py-1 hover:bg-purple-600 focus:outline-none"
-                onclick="changeValue()">
-                Change
-            </button>
+        <div class="mb-4">
+            <div class="text-gray-700 font-semibold" id="original-value">
+                Have you read this book?
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="flex items-center">
+                <input type="radio" id="status" name="status" value="done"
+                    class="h-4 w-4 border-gray-300 rounded text-purple-500 focus:ring-purple-500"
+                    <%= book.status === 'done' ? 'checked' : '' %>>
+                <label for="status" class="ml-2 text-gray-700 text-sm">Yes</label>
+                </div>
+                <div class="flex items-center">
+                <input type="radio" id="status2" name="status" value="reading"
+                    class="h-4 w-4 border-gray-300 rounded text-purple-500 focus:ring-purple-500"
+                    <%= book.status === 'reading' ? 'checked' : '' %>>
+                <label for="status" class="ml-2 text-gray-700 text-sm">Reading</label>
+                </div>
+                <div class="flex items-center">
+                <input type="radio" id="status3" name="status" value="unread"
+                    class="h-4 w-4 border-gray-300 rounded text-purple-500 focus:ring-purple-500"
+                    <%= book.status === 'unread' ? 'checked' : '' %>>
+                <label for="status" class="ml-2 text-gray-700 text-sm">No</label>
+                </div>
+            </div>
         </div>
-        <div class="grid grid-cols-4 gap-2 mb-4 items-center">
-            <span class="inline-block py-1 text-sm font-semibold rounded-full text-center text-green-700 bg-green-100">Done</span>
-            <span class="inline-block py-1 text-sm font-semibold rounded-full text-center text-yellow-700 bg-yellow-100">Reading</span>
-            <span class="inline-block py-1 text-sm font-semibold rounded-full text-center text-red-700 bg-red-100">Unread</span>
-            <!-- Button -->
-            <button class="bg-purple-500 text-white rounded text-center py-1 hover:bg-purple-600 focus:outline-none"
-                onclick="changeValue()">
-                Change
-            </button>
+
+        <!-- Rating Field (Hidden when isRead is false) -->
+        <div id="ratingField" class="mb-4">
+            <label for="rating" class="block text-gray-700 text-sm font-medium">Rating (0-10)</label>
+            <div class="flex items-center space-x-4">
+                <!-- Range Input -->
+                <input type="range" id="rating" name="rating" min="0" max="10" step="1" 
+                    value="<%= book.rating !== null ? book.rating : 5 %>"
+                    class="w-full h-2 bg-purple-200 rounded-lg">
+                <!-- Rating Value Display -->
+                <span id="ratingValue" class="text-gray-700 text-sm">
+                    <%= book.rating !== null ? book.rating : 5 %>
+                </span>
+            </div>
         </div>
+
+        <button class="bg-purple-500 w-full text-white rounded text-center my-4 py-1 hover:bg-purple-600 focus:outline-none"
+            onclick="save()">
+            Save
+        </button>
+
+        <div class="text-gray-700 font-semibold" id="original-value">
+            Add/Remove Genres
+        </div>
+        <% all_genres.forEach(genre => { %>
+
+            <% if (genres.some(g => g.name === genre.name)) { %>
+                <button type="button" onclick="addRemoveGenre('<%= genre._id %>', 'remove')"
+                    class="my-2 text-green-500 border-2 border-green-500 p-2 rounded-full hover:bg-green-500 hover:text-white transition-all">
+                    <%= genre.name %>
+                </button>
+            <% } else { %>
+                <button type="button" onclick="addRemoveGenre('<%= genre._id %>', 'add')"
+                    class="my-2 text-purple-500 border-2 border-purple-500 p-2 rounded-full hover:bg-purple-500 hover:text-white transition-all">
+                    <%= genre.name %>
+                </button>
+            <% } %>
+            
+
+        <% }); %>
+
+        <button class="bg-red-500 w-full text-white rounded text-center my-4 py-1 hover:bg-red-600 focus:outline-none"
+            onclick="delete_book()">
+            DELETE BOOK
+        </button>
+
+
+    <script>
+        function addRemoveGenre(id, action) {
+            const book_id = "<%= book._id %>";
+
+            let url = '?book_id=' + book_id + "&genre_id=" + id;
+            if (action == "remove") {
+                url = '/books/remove_genre_from_book' + url;
+            }
+            if (action == "add") {
+                url = '/books/add_genre_to_book' + url;
+            }
+            window.location.href = url;
+        }
+
+        function getSelectedStatus() {
+            const selectedRadio = document.querySelector('input[name="status"]:checked'); // Select the checked radio button with name="status"
+            
+            if (selectedRadio) {
+                const selectedValue = selectedRadio.value;  // Get the value of the selected radio button
+                return selectedValue;  // You can also return or use it elsewhere in your code
+            } else {
+                return null;  // Return null if no radio button is selected
+            }
+        }
+
+        function delete_book() {
+            const book_id = "<%= book._id %>";
+            let url = "/books/delete_book?";
+            url += "id=" + book_id;
+            window.location.href = url;
+        }
+
+        function save() {
+            const book_id = "<%= book._id %>";
+
+            const inputName = document.getElementById("input-name");
+            const book_name = inputName.value;
+            const inputAuthor = document.getElementById("input-author");
+            const book_author = inputAuthor.value;
+            const inputYear = document.getElementById("input-year");
+            const book_year = inputYear.value;
+            const book_status = getSelectedStatus();
+            const inputRating = document.getElementById("rating");
+            const book_rating = inputRating.value;
+
+            let url = '/books/edit_book?';
+            url += "id=" + book_id + "&";
+            url += "name=" + book_name + "&";
+            url += "author=" + book_author + "&";
+            url += "year=" + book_year + "&";
+            url += "status=" + book_status + "&";
+            url += "rating=" + book_rating;
+
+            window.location.href = url;
+        }
+
+        const rangeInput = document.getElementById('rating');
+        const ratingValue = document.getElementById('ratingValue');
+        const ratingInputField = document.getElementById('ratingInput');
+        const isReadYesRadio = document.getElementById('status');
+        const ratingField = document.getElementById('ratingField');
+
+        // Initially hide the rating field if isRead is 'No'
+        if (isReadYesRadio.checked) {
+        ratingField.style.display = 'block'; // Show rating field
+        } else {
+        ratingField.style.display = 'none'; // Hide rating field
+        }
+
+        // Event listener to update rating value and synchronize the range and number input
+        rangeInput.addEventListener('input', function () {
+        const value = rangeInput.value;
+        ratingValue.textContent = value;
+        ratingInputField.value = value;
+        });
+
+        // Event listener for the radio buttons to toggle rating visibility
+        isReadYesRadio.addEventListener('change', function () {
+        ratingField.style.display = 'block'; // Show rating field when "Yes" is selected
+        });
+
+        const isReadNoRadio = document.getElementById('status2');
+        isReadNoRadio.addEventListener('change', function () {
+        ratingField.style.display = 'none'; // Hide rating field when "No" is selected
+        });
+        const isReadNoRadio2 = document.getElementById('status3');
+        isReadNoRadio2.addEventListener('change', function () {
+        ratingField.style.display = 'none'; // Hide rating field when "No" is selected
+        });
+    </script>
 </section>

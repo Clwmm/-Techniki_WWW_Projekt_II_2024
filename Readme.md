@@ -1,5 +1,10 @@
 ### After clone
 1. Run ```npm install```
+2. Create ```.env``` file in the project root folder with the following template:
+
+```
+MONGODB=<mongoDB atlas connection uri to the cluster>
+```
 
 ### Start dev Server
 1. Run ```npm run devStart```
