@@ -1,6 +1,6 @@
 <section class="w-full bg-gray-100 p-6 rounded-lg shadow-lg">
     <%= book %>
-        <div class="grid grid-cols-3 gap-4 mb-4 items-center">
+        <div class="grid grid-cols-3 gap-2 mb-4 items-center">
             <!-- Original Value -->
             <div class="text-gray-700 font-semibold" id="original-value">
                 <%= book.name %>
@@ -12,12 +12,12 @@
                 id="input-value" placeholder="New name" />
 
             <!-- Button -->
-            <button class="bg-purple-500 text-white rounded px-4 py-1 hover:bg-purple-600 focus:outline-none"
+            <button class="bg-purple-500 text-white rounded text-center py-1 hover:bg-purple-600 focus:outline-none"
                 onclick="changeValue()">
                 Change
             </button>
         </div>
-        <div class="grid grid-cols-3 gap-4 mb-4 items-center">
+        <div class="grid grid-cols-3 gap-2 mb-4 items-center">
             <!-- Original Value -->
             <div class="text-gray-700 font-semibold" id="original-value">
                 <%= book.author %>
@@ -29,12 +29,12 @@
                 id="input-value" placeholder="New Author" />
 
             <!-- Button -->
-            <button class="bg-purple-500 text-white rounded px-4 py-1 hover:bg-purple-600 focus:outline-none"
+            <button class="bg-purple-500 text-white rounded text-center py-1 hover:bg-purple-600 focus:outline-none"
                 onclick="changeValue()">
                 Change
             </button>
         </div>
-        <div class="grid grid-cols-3 gap-4 mb-4 items-center">
+        <div class="grid grid-cols-3 gap-2 mb-4 items-center">
             <!-- Original Value -->
             <div class="text-gray-700 font-semibold" id="original-value">
                 <%= book.year %>
@@ -46,41 +46,17 @@
                 id="input-value" placeholder="New Year" />
 
             <!-- Button -->
-            <button class="bg-purple-500 text-white rounded px-4 py-1 hover:bg-purple-600 focus:outline-none"
+            <button class="bg-purple-500 text-white rounded text-center py-1 hover:bg-purple-600 focus:outline-none"
                 onclick="changeValue()">
                 Change
             </button>
         </div>
-        <div class="grid grid-cols-3 gap-4 mb-4 items-center">
-            <!-- Original Value -->
-            <div class="text-gray-700 font-semibold" id="original-value">
-                <%= book.rating %>
-            </div>
-
-            <!-- Input Field -->
-            <input type="number"
-                class="border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                id="input-value" placeholder="New Rating" />
-
+        <div class="grid grid-cols-4 gap-2 mb-4 items-center">
+            <span class="inline-block py-1 text-sm font-semibold rounded-full text-center text-green-700 bg-green-100">Done</span>
+            <span class="inline-block py-1 text-sm font-semibold rounded-full text-center text-yellow-700 bg-yellow-100">Reading</span>
+            <span class="inline-block py-1 text-sm font-semibold rounded-full text-center text-red-700 bg-red-100">Unread</span>
             <!-- Button -->
-            <button class="bg-purple-500 text-white rounded px-4 py-1 hover:bg-purple-600 focus:outline-none"
-                onclick="changeValue()">
-                Change
-            </button>
-        </div>
-        <div class="grid grid-cols-3 gap-4 mb-4 items-center">
-            <!-- Original Value -->
-            <div class="text-gray-700 font-semibold" id="original-value">
-                <%= book.status %>
-            </div>
-
-            <!-- Input Field -->
-            <input type="text"
-                class="border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                id="input-value" placeholder="New Value" />
-
-            <!-- Button -->
-            <button class="bg-purple-500 text-white rounded px-4 py-1 hover:bg-purple-600 focus:outline-none"
+            <button class="bg-purple-500 text-white rounded text-center py-1 hover:bg-purple-600 focus:outline-none"
                 onclick="changeValue()">
                 Change
             </button>
